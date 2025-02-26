@@ -1,6 +1,5 @@
 from music21 import stream, note, meter, key, tempo
 from PyQt6.QtCore import QObject, pyqtSignal as Signal, pyqtSlot as Slot
-import string
 
 external_data = [
         {"pitch": "C", "accidental": "#", "octave": 4, "duration": 1},
@@ -11,12 +10,13 @@ external_data = [
 
 fp='testMusic.musicxml'
 
-class convertToXML(QObject):
+class readArudinoData(QObject):
 
-    xml_file_path = Signal(string)
+    xml_file_path = Signal(str)
 
     @Slot()
     def process_external_data(self, data, fp, bpm = 90):
+        print("This function has been called")
         score = stream.Score()
         part = stream.Part()
 
@@ -61,8 +61,8 @@ class convertToXML(QObject):
 
         self.xml_file_path.emit(fp)
 
-    """ Plans for future """
+    #Plans for future
     #Determine key signature if not defined by user
     #take input for bpm
 
-convertToXML().process_external_data(external_data, fp, bpm = 90)
+#convertToXML().process_external_data(external_data, fp, bpm = 90)

@@ -7,5 +7,8 @@ class ASMController(QObject):
         self.toAPI = toAPI
         self.view = view
 
+        # Call function to convert data into MusicXML
+        self.view.convertAudioIntoSheetMusic.connect(self.readArudinoData.process_external_data)
+
         # Send file path to API
         self.readArudinoData.xml_file_path.connect(self.toAPI.upload_musicxml_to_api)
