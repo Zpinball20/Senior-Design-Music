@@ -59,13 +59,13 @@ class readArudinoData(QObject):
             measure.append(n)
             current_duration += duration
 
-            # Start a new measure if current one exceeds 4 beats
+            # Start new measure if current one more than 4 beats (this will be dynamic later)
             if current_duration >= 4:
                 part.append(measure)
                 measure = stream.Measure()
                 current_duration = 0
 
-        # Add the last measure if it's not empty
+        # Add the last measure if not empty
         if len(measure.notes) > 0:
             part.append(measure)
 
