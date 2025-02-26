@@ -35,12 +35,12 @@ class readArudinoData(QObject):
 
         ######################################
 
-        # Add basic time signature and key signature
+        # time sig and key sig
         part.append(meter.TimeSignature('4/4'))
-        part.append(key.KeySignature(0))  # C major / A minor fot simplicity
+        part.append(key.KeySignature(0))  # C maj
 
         measure = stream.Measure()
-        current_duration = 0  # To track when to start a new measure
+        current_duration = 0 
 
         for item in data:
             pitch = item['pitch']
@@ -48,13 +48,11 @@ class readArudinoData(QObject):
             octave = item['octave']
             duration = item['duration']
 
-            # Combine pitch, accidental, and octave
             full_pitch = f"{pitch}{accidental}{octave}"
             n = note.Note(full_pitch)
             n.quarterLength = duration
 
-            # Add tempo (BPM)
-            metronome = tempo.MetronomeMark(number=bpm)  # Set BPM
+            metronome = tempo.MetronomeMark(number=bpm)  # set BPM
             part.append(metronome)
 
             # Add note to measure
