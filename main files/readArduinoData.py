@@ -1,0 +1,68 @@
+from music21 import stream, note, meter, key, tempo
+from PyQt6.QtCore import QObject, pyqtSignal as Signal, pyqtSlot as Slot
+import string
+
+external_data = [
+        {"pitch": "C", "accidental": "#", "octave": 4, "duration": 1},
+        {"pitch": "F", "accidental": "", "octave": 4, "duration": 2},
+        {"pitch": "B", "accidental": "-", "octave": 3, "duration": 0.5},
+        {"pitch": "A", "accidental": "", "octave": 5, "duration": 4}
+    ]
+
+fp='testMusic.musicxml'
+
+class convertToXML(QObject):
+
+    xml_file_path = Signal(string)
+
+    @Slot()
+    def process_external_data(self, data, fp, bpm = 90):
+        score = stream.Score()
+        part = stream.Part()
+
+        # Add basic time signature and key signature
+        part.append(meter.TimeSignature('4/4'))
+        part.append(key.KeySignature(0))  # C major / A minor for simplicity
+
+        measure = stream.Measure()
+        current_duration = 0  # To track when to start a new measure
+
+        for item in data:
+            pitch = item['pitch']
+            accidental = item['accidental']
+            octave = item['octave']
+            duration = item['duration']
+
+            # Combine pitch, accidental, and octave
+            full_pitch = f"{pitch}{accidental}{octave}"
+            n = note.Note(full_pitch)
+            n.quarterLength = duration
+
+            # Add tempo (BPM)
+            metronome = tempo.MetronomeMark(number=bpm)  # Set BPM
+            part.append(metronome)
+
+            # Add note to measure
+            measure.append(n)
+            current_duration += duration
+
+            # Start a new measure if current one exceeds 4 beats
+            if current_duration >= 4:
+                part.append(measure)
+                measure = stream.Measure()
+                current_duration = 0
+
+        # Add the last measure if it's not empty
+        if len(measure.notes) > 0:
+            part.append(measure)
+
+        score.append(part)
+        score.write('musicxml', fp)
+
+        self.xml_file_path.emit(fp)
+
+    """ Plans for future """
+    #Determine key signature if not defined by user
+    #take input for bpm
+
+convertToXML().process_external_data(external_data, fp, bpm = 90)
