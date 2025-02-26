@@ -25,7 +25,6 @@ class MainApplication(QWidget):
     @Slot()
     def convertAudioData(self):
         self.convertAudioIntoSheetMusic.emit()
-        print("button pressed")
 
 app = QApplication(sys.argv)
 window = MainApplication()

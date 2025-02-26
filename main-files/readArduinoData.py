@@ -8,17 +8,26 @@ external_data = [
         {"pitch": "A", "accidental": "", "octave": 5, "duration": 4}
     ]
 
-fp='testMusic.musicxml'
-
 class readArudinoData(QObject):
 
     xml_file_path = Signal(str)
 
     @Slot()
-    def process_external_data(self, data, fp, bpm = 90):
+    def process_external_data(self):
         print("This function has been called")
         score = stream.Score()
         part = stream.Part()
+
+        data = [
+            {"pitch": "C", "accidental": "#", "octave": 4, "duration": 1},
+            {"pitch": "F", "accidental": "", "octave": 4, "duration": 2},
+            {"pitch": "B", "accidental": "-", "octave": 3, "duration": 0.5},
+            {"pitch": "A", "accidental": "", "octave": 5, "duration": 4}
+        ]
+
+        fp='testMusic.musicxml'
+
+        bpm = 90
 
         # Add basic time signature and key signature
         part.append(meter.TimeSignature('4/4'))
