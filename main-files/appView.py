@@ -25,8 +25,3 @@ class MainApplication(QWidget):
     @Slot()
     def convertAudioData(self):
         self.convertAudioIntoSheetMusic.emit()
-
-app = QApplication(sys.argv)
-window = MainApplication()
-window.show()
-sys.exit(app.exec())

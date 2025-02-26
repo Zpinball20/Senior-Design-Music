@@ -1,4 +1,5 @@
 from PyQt6.QtCore import QObject
+from PyQt6.QtWidgets import QApplication
 from readArduinoData import readArudinoData
 from toAPI import toAPI
 from ASMController import ASMController
@@ -7,11 +8,18 @@ import os
 import sys
 sys.path.insert(1, os.path.join(os.getcwd(), 'main-files'))
 
-class ASMLogic:
-    def __init__(self):
-        super().__init__()
 
-        self.readArudinoData = readArudinoData()
-        self.toAPI = toAPI()
-        self.view = MainApplication()
-        self.ASMController = ASMController(self.readArudinoData, self.toAPI, self.view)
+def main():
+    app = QApplication(sys.argv)
+
+    reader = readArudinoData()
+    api = toAPI()
+    view = MainApplication()
+    controller = ASMController(reader, api, view)
+
+    view.show()
+    
+    sys.exit(app.exec())
+
+if __name__ == "__main__":
+    main()

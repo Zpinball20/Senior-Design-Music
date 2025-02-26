@@ -12,12 +12,16 @@ class readArudinoData(QObject):
 
     xml_file_path = Signal(str)
 
+    def __init__(self):
+        super().__init__()
+
     @Slot()
     def process_external_data(self):
         print("This function has been called")
         score = stream.Score()
         part = stream.Part()
 
+        ## TO BE REMOVED LATER (TEST DATA) ##
         data = [
             {"pitch": "C", "accidental": "#", "octave": 4, "duration": 1},
             {"pitch": "F", "accidental": "", "octave": 4, "duration": 2},
@@ -29,9 +33,11 @@ class readArudinoData(QObject):
 
         bpm = 90
 
+        ######################################
+
         # Add basic time signature and key signature
         part.append(meter.TimeSignature('4/4'))
-        part.append(key.KeySignature(0))  # C major / A minor for simplicity
+        part.append(key.KeySignature(0))  # C major / A minor fot simplicity
 
         measure = stream.Measure()
         current_duration = 0  # To track when to start a new measure
