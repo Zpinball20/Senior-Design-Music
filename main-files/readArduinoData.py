@@ -1,13 +1,6 @@
 from music21 import stream, note, meter, key, tempo
 from PyQt6.QtCore import QObject, pyqtSignal as Signal, pyqtSlot as Slot
 
-external_data = [
-        {"pitch": "C", "accidental": "#", "octave": 4, "duration": 1},
-        {"pitch": "F", "accidental": "", "octave": 4, "duration": 2},
-        {"pitch": "B", "accidental": "-", "octave": 3, "duration": 0.5},
-        {"pitch": "A", "accidental": "", "octave": 5, "duration": 4}
-    ]
-
 class readArudinoData(QObject):
 
     xml_file_path = Signal(str)
