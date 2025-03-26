@@ -1,9 +1,10 @@
 from PyQt6.QtCore import QObject
 from PyQt6.QtWidgets import QApplication
-from readArduinoData import readArudinoData
+from convertArduinoData import convertArudinoData
 from toAPI import toAPI
 from ASMController import ASMController
 from appView import MainApplication
+from pythonToArduino import py_to_arduino
 import os
 import sys
 sys.path.insert(1, os.path.join(os.getcwd(), 'main-files'))
@@ -11,10 +12,11 @@ sys.path.insert(1, os.path.join(os.getcwd(), 'main-files'))
 def main():
     app = QApplication(sys.argv)
 
-    reader = readArudinoData()
+    arduinoConverter = convertArudinoData()
     api = toAPI()
     view = MainApplication()
-    controller = ASMController(reader, api, view)
+    arduinoComm = py_to_arduino()
+    controller = ASMController(arduinoConverter, api, view, arduinoComm)
 
     view.show()
     

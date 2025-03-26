@@ -1,26 +1,20 @@
 from music21 import stream, note, meter, key, tempo
 from PyQt6.QtCore import QObject, pyqtSignal as Signal, pyqtSlot as Slot
 
-class readArudinoData(QObject):
+class convertArudinoData(QObject):
 
     xml_file_path = Signal(str)
 
     def __init__(self):
         super().__init__()
 
-    @Slot()
-    def process_external_data(self):
+    @Slot(list)
+    def process_external_data(self, data: list):
         print("This function has been called")
         score = stream.Score()
         part = stream.Part()
 
         ## TO BE REMOVED LATER (TEST DATA) ##
-        data = [
-            {"pitch": "C", "accidental": "#", "octave": 4, "duration": 1},
-            {"pitch": "F", "accidental": "", "octave": 4, "duration": 2},
-            {"pitch": "B", "accidental": "-", "octave": 3, "duration": 0.5},
-            {"pitch": "A", "accidental": "", "octave": 5, "duration": 4}
-        ]
 
         fp='testMusic.musicxml'
 
