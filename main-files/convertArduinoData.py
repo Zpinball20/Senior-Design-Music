@@ -64,5 +64,3 @@ class convertArudinoData(QObject):
     #Plans for future
     #Determine key signature if not defined by user
     #take input for bpm
-
-#convertToXML().process_external_data(external_data, fp, bpm = 90)
