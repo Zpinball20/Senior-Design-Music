@@ -1,0 +1,27 @@
+2025-03-31 14:16:41,586 INFO [liveTest]                 Book.java:562  | 1 sheet in C:\Users\zachf\Documents\Github\Senior-Design-Music\liveTest.pdf
+2025-03-31 14:16:41,707 INFO []                 Book.java:2531 | Stored /book.xml
+2025-03-31 14:16:41,709 INFO []                 Book.java:2491 | Book stored as C:\Users\zachf\Documents\Github\Senior-Design-Music\liveTest.omr
+2025-03-31 14:16:41,713 INFO []                 Book.java:1933 | Book reaching PAGE on sheets:[#1]
+2025-03-31 14:16:41,714 INFO [liveTest]       StepMonitoring.java:98   | LOAD
+2025-03-31 14:16:41,902 INFO [liveTest]            SheetStub.java:1268 | Loaded image #1 2550x3299 from C:\Users\zachf\Documents\Github\Senior-Design-Music\liveTest.pdf
+2025-03-31 14:16:41,906 INFO [liveTest]       StepMonitoring.java:98   | BINARY
+2025-03-31 14:16:42,182 INFO [liveTest]       StepMonitoring.java:98   | SCALE
+2025-03-31 14:16:42,189 INFO [liveTest]         ScaleBuilder.java:241  | Beam  guessed height: 10 -- 0.50 of 21 interline
+2025-03-31 14:16:42,190 INFO [liveTest]         ScaleBuilder.java:264  | Beam measured height:  8 -- 0.13 of [6..21] range at 222% of needed quorum
+2025-03-31 14:16:42,190 INFO [liveTest]            ScaleStep.java:65   | Scale{ interline(20,21,21) line(2,2,3) beam(8)}
+2025-03-31 14:16:42,191 INFO [liveTest]       StepMonitoring.java:98   | GRID
+2025-03-31 14:16:42,302 INFO [liveTest]       LinesRetriever.java:1500 | Global slope: 0.00000
+2025-03-31 14:16:42,307 INFO [liveTest]    ClustersRetriever.java:328  | Retrieved raw line clusters: 1 of sizes [5] with interline(20,21,21)
+2025-03-31 14:16:42,312 WARN [liveTest]            PeakGraph.java:305  | No system found
+2025-03-31 14:16:42,313 INFO [liveTest]                 Book.java:545  | Created scores: []
+2025-03-31 14:16:42,313 INFO [liveTest]            SheetStub.java:1186 | Sheet liveTest flagged as invalid.
+2025-03-31 14:16:42,314 INFO [liveTest]            SheetStub.java:1394 | StepException cause detected in [LOAD, BINARY, SCALE, GRID, HEADERS, STEM_SEEDS, BEAMS, LEDGERS, HEADS, STEMS, REDUCTION, CUE_BEAMS, TEXTS, MEASURES, CHORDS, CURVES, SYMBOLS, LINKS, RHYTHMS, PAGE]
+2025-03-31 14:16:42,314 INFO [liveTest]                 Book.java:2550 | Book{liveTest} storing
+2025-03-31 14:16:42,336 INFO [liveTest]                 Book.java:2531 | Stored /book.xml
+2025-03-31 14:16:42,412 INFO [liveTest]           DataHolder.java:348  | Stored /sheet#1/BINARY.png
+2025-03-31 14:16:42,620 INFO [liveTest]                Sheet.java:1561 | Stored /sheet#1/sheet#1.xml
+2025-03-31 14:16:42,620 INFO [liveTest]                 Book.java:2491 | Book stored as C:\Users\zachf\Documents\Github\Senior-Design-Music\liveTest.omr
+2025-03-31 14:16:42,623 INFO [liveTest]            SheetStub.java:1644 | Disposed sheet
+2025-03-31 14:16:42,679 INFO [liveTest]                 Book.java:2018 | End of Stub#1 memory: 19,126,800
+2025-03-31 14:16:42,681 INFO [liveTest]                 Book.java:2025 | Book processed.
+2025-03-31 14:16:42,681 INFO [liveTest]                 Book.java:599  | Could not export since transcription did not complete successfully

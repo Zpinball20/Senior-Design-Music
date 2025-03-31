@@ -5,32 +5,37 @@ import os
 import zipfile
 
 class toMIDI(QObject):
+    
     def __init__(self):
-        super().__init__
+        super().__init__()
         self.inputFilePath = None #This is the file location of the PDF to be converted
         self.outputFilePath = None
         self.xmlFilePath = None
         self.currentDirectory = None
 
     @Slot(str)
-    def set_input_filepath(self, path: str):
+    def setInputFilePath(self, path: str):
         self.inputFilePath = path
         print(self.inputFilePath)
 
     @Slot(str)
-    def set_output_filepath(self, path: str):
+    def setOutputFilePath(self, path: str):
         self.outputFilePath = path
         print(self.outputFilePath)
 
     @Slot(str)
-    def set_directory(self, path: str):
+    def setDirectory(self, path: str):
         self.currentDirectory = path
         print(self.currentDirectory)
 
-    def convert_toMIDI(self, xml_file: str):
+    @Slot()
+    def convert_toMIDI(self):
+
+        self.convert_pdf_to_musicxml()
+
         try:
 
-            xml_file = converter.parse(xml_file)
+            xml_file = converter.parse(self.xmlFilePath)
             
             xml_file.write('midi', self.outputFilePath)
             
@@ -58,7 +63,7 @@ class toMIDI(QObject):
 
             # Find .MusicXML file
             for extracted_file in os.listdir(self.currentDirectory):
-                if extracted_file.endswith(".musicxml"):
+                if extracted_file.endswith(".musicxml") or extracted_file.endswith(".xml"):
                     self.xmlFilePath = os.path.join(self.currentDirectory, extracted_file)
                     print(f"MusicXML file ready: {self.xmlFilePath}")
                     return  # Stop searching after first valid file

@@ -8,7 +8,6 @@ from PyQt6.QtGui import QFont, QColor, QPalette, QPixmap
 import os
 
 class MainApplication(QWidget):
-    convertAudioIntoSheetMusic = Signal()
 
     def __init__(self):
         super().__init__()
@@ -50,9 +49,10 @@ class MainApplication(QWidget):
         self.fileName = self.audioMenu.name_of_file
 
         # Sheet Music --> MIDI Signals
-        self.input_pdf_file = self.midiMenu.inputPdfFile
+        self.inputFileLocation = self.midiMenu.inputPdfFile
         self.output_midi_file = self.midiMenu.outputFileLocation
         self.wrkingDir = self.midiMenu.working_directory
+        self.runConv = self.midiMenu.run_conversion
 
 class audioMenu(QWidget):
     record_signal = Signal(bool)
@@ -108,15 +108,12 @@ class audioMenu(QWidget):
             self.sheet_music_save_path.emit(self.save_path)
             self.name_of_file.emit(self.file_name)
 
-
-import os
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QPushButton, QLabel, QFileDialog
-
 class midiMenu(QWidget):
 
     inputPdfFile = Signal(str)
     outputFileLocation = Signal(str)
     working_directory = Signal(str)
+    run_conversion = Signal()
 
     def __init__(self, parent):
         super().__init__()
@@ -141,13 +138,17 @@ class midiMenu(QWidget):
         output_button.clicked.connect(self.select_output_file)
         self.output_label = QLabel("No output file selected")
 
+        # Run Conversion button
+        to_midi_button = QPushButton("Convert to MIDI")
+        output_button.clicked.connect(self.send_conversion_signal)
+
         layout.addWidget(back_button)
         layout.addWidget(label)
         layout.addWidget(input_button)
         layout.addWidget(self.input_label)
         layout.addWidget(output_button)
         layout.addWidget(self.output_label)
-
+        layout.addWidget(to_midi_button)
         self.setLayout(layout)
 
     def select_input_file(self):
@@ -170,3 +171,7 @@ class midiMenu(QWidget):
             self.output_label.setText(f"Output: {os.path.basename(file_path)}")
             self.outputFileLocation.emit(self.output_file)
             self.working_directory.emit(os.path.dirname(self.output_file))
+
+    def send_conversion_signal(self):
+        if(self.input_file != None and self.output_file != None):
+            self.run_conversion.emit()

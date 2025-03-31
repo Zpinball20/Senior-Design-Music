@@ -23,10 +23,10 @@ class py_to_arduino(QObject):
             self.timer.start(500)
             #data = arduino.readline().decode('utf-8').strip()
             data = [
-                {"pitch": "C", "accidental": "#", "octave": 4, "duration": 1},
-                {"pitch": "F", "accidental": "", "octave": 4, "duration": 2},
-                {"pitch": "B", "accidental": "-", "octave": 3, "duration": 0.5},
-                {"pitch": "A", "accidental": "", "octave": 5, "duration": 4}
+                {"pitch": "C", "accidental": "", "octave": 4, "duration": 1},
+                {"pitch": "D", "accidental": "", "octave": 4, "duration": 2},
+                {"pitch": "E", "accidental": "", "octave": 4, "duration": 0.5},
+                {"pitch": "F", "accidental": "", "octave": 4, "duration": 0.5}
             ]
 
             self.raw_arduino_data.emit(data)

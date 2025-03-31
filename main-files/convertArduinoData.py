@@ -70,7 +70,7 @@ class convertArudinoData(QObject):
         score.append(part)
         score.write('musicxml', self.xmlFileName)
 
-        self.convert_to_pdf(self.outputFilePath)
+        self.convert_to_pdf()
 
 
 

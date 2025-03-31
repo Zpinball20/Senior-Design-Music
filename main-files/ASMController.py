@@ -1,10 +1,9 @@
 from PyQt6.QtCore import QObject
 
 class ASMController(QObject):
-    def __init__(self, reader, api, viewer, arduinoComm, midiConverter):
+    def __init__(self, reader, viewer, arduinoComm, midiConverter):
         super().__init__()
         self.convertArudinoData = reader
-        self.toAPI = api
         self.view = viewer
         self.serialReader = arduinoComm
         self.midiConverter = midiConverter
@@ -20,6 +19,7 @@ class ASMController(QObject):
         self.view.fileName.connect(self.convertArudinoData.set_musicxml_file_name)
 
         #Send user information for file saving the Sheet Music --> MIDI
-        self.view.input_pdf_file.connect(self.midiConverter.set_input_filepath)
-        self.view.output_midi_file.connect(self.midiConverter.set_output_filepath)
-        self.view.wrkingDir.connect(self.midiConverter.set_directory)
+        self.view.inputFileLocation.connect(self.midiConverter.setInputFilePath)
+        self.view.output_midi_file.connect(self.midiConverter.setOutputFilePath)
+        self.view.wrkingDir.connect(self.midiConverter.setDirectory)
+        self.view.runConv.connect(self.midiConverter.convert_toMIDI)
