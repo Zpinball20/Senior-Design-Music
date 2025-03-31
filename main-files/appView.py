@@ -1,11 +1,11 @@
 from PyQt6.QtWidgets import (QWidget, QLabel, QVBoxLayout, QPushButton, QSlider, QButtonGroup,
                              QLineEdit, QGroupBox, QFormLayout, QGridLayout, QComboBox, QSpinBox,
-                             QDoubleSpinBox, QCheckBox, QRadioButton, QHBoxLayout, QApplication, QStackedWidget)
+                             QDoubleSpinBox, QCheckBox, QRadioButton, QHBoxLayout, QApplication, QStackedWidget, QFileDialog)
 from PyQt6.QtCore import pyqtSignal as Signal
 from PyQt6.QtCore import pyqtSlot as Slot
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont, QColor, QPalette, QPixmap
-import sys
+import os
 
 class MainApplication(QWidget):
     convertAudioIntoSheetMusic = Signal()
@@ -44,27 +44,47 @@ class MainApplication(QWidget):
 
         self.stack.setCurrentWidget(self.main_menu)
 
+        # Audio --> Sheet Music Signals
         self.send_go_signal = self.audioMenu.record_signal
+        self.sheetMusicSavePath = self.audioMenu.sheet_music_save_path
+        self.fileName = self.audioMenu.name_of_file
+
+        # Sheet Music --> MIDI Signals
+        self.input_pdf_file = self.midiMenu.inputPdfFile
+        self.output_midi_file = self.midiMenu.outputFileLocation
+        self.wrkingDir = self.midiMenu.working_directory
 
 class audioMenu(QWidget):
     record_signal = Signal(bool)
+    sheet_music_save_path = Signal(str) # Signal for save location of pdf (audio into sheet music)
+    name_of_file = Signal(str) # signal for base name of file
 
     def __init__(self, parent):
         super().__init__()
         self.parent = parent
-        layout = QVBoxLayout()
         self.recording = False
+        self.save_path = None # Save path of the pdf
+        self.sheet_music_file_name = None # base name of file
 
-        back_button = QPushButton("← Back")
+        layout = QVBoxLayout()
+
+        back_button = QPushButton("← RETURN TO MAIN MENU")
         back_button.clicked.connect(lambda: self.parent.stack.setCurrentWidget(self.parent.main_menu))
 
         label = QLabel("Convert Audio to Sheet Music")
+
+        save_as_button = QPushButton("Save As...")
+        save_as_button.clicked.connect(self.choose_save_location)
+
+        self.save_location_label = QLabel("No file selected")  # Label to display the chosen file path
 
         toggle_recording_button = QPushButton("Start Recording")
         toggle_recording_button.clicked.connect(self.toggle_recording)
 
         layout.addWidget(back_button)
         layout.addWidget(label)
+        layout.addWidget(save_as_button)
+        layout.addWidget(self.save_location_label)
         layout.addWidget(toggle_recording_button)
         self.setLayout(layout)
 
@@ -72,17 +92,81 @@ class audioMenu(QWidget):
         self.recording = not self.recording
         self.record_signal.emit(self.recording)
 
+    def choose_save_location(self):
+        file_path, _ = QFileDialog.getSaveFileName(
+            self, 
+            "Save As", 
+            "", 
+            "PDF (*.pdf);;All Files (*.*)"
+        )
+        if file_path:
+            self.save_path = file_path
+            self.file_name = os.path.splitext(os.path.basename(file_path))[0]
+            self.save_location_label.setText(f"Saving to: {self.save_path}")
+
+            #Emit signals to be used in saving the pdf
+            self.sheet_music_save_path.emit(self.save_path)
+            self.name_of_file.emit(self.file_name)
+
+
+import os
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QPushButton, QLabel, QFileDialog
+
 class midiMenu(QWidget):
+
+    inputPdfFile = Signal(str)
+    outputFileLocation = Signal(str)
+    working_directory = Signal(str)
+
     def __init__(self, parent):
         super().__init__()
         self.parent = parent
+        self.input_file = None
+        self.output_file = None
+
         layout = QVBoxLayout()
 
-        back_button = QPushButton("← Back")
+        back_button = QPushButton("← RETURN TO MAIN MENU")
         back_button.clicked.connect(lambda: self.parent.stack.setCurrentWidget(self.parent.main_menu))
 
-        label = QLabel("This is Menu 2")
+        label = QLabel("Convert Sheet Music to MIDI")
+
+        # Input file selection (PDF only)
+        input_button = QPushButton("Select PDF File")
+        input_button.clicked.connect(self.select_input_file)
+        self.input_label = QLabel("No input file selected")
+
+        # Output file selection
+        output_button = QPushButton("Select Output Destination")
+        output_button.clicked.connect(self.select_output_file)
+        self.output_label = QLabel("No output file selected")
 
         layout.addWidget(back_button)
         layout.addWidget(label)
+        layout.addWidget(input_button)
+        layout.addWidget(self.input_label)
+        layout.addWidget(output_button)
+        layout.addWidget(self.output_label)
+
         self.setLayout(layout)
+
+    def select_input_file(self):
+        file_path, _ = QFileDialog.getOpenFileName(
+            self, "Select PDF File", "", "PDF Files (*.pdf)"
+        )
+        if file_path:
+            self.input_file = file_path
+            self.input_label.setText(f"Input: {os.path.basename(file_path)}")
+            self.inputPdfFile.emit(self.input_file)
+
+
+    def select_output_file(self):
+        file_path, _ = QFileDialog.getSaveFileName(
+            self, "Select Output Destination", "", 
+            "MIDI Files (*.mid);;All Files (*.*)"
+        )
+        if file_path:
+            self.output_file = file_path
+            self.output_label.setText(f"Output: {os.path.basename(file_path)}")
+            self.outputFileLocation.emit(self.output_file)
+            self.working_directory.emit(os.path.dirname(self.output_file))

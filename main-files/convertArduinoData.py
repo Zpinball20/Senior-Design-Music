@@ -1,12 +1,23 @@
 from music21 import stream, note, meter, key, tempo
 from PyQt6.QtCore import QObject, pyqtSignal as Signal, pyqtSlot as Slot
+import subprocess
 
 class convertArudinoData(QObject):
 
-    xml_file_path = Signal(str)
-
     def __init__(self):
         super().__init__()
+        self.xmlFileName = None
+        self.outputFilePath = None
+
+    @Slot(str)
+    def set_musicxml_file_name(self, name: str):
+        self.xmlFileName = name + ".musicxml"
+        #print(self.xmlFileName)
+
+    @Slot(str)
+    def set_output_file_path(self, path: str):
+        self.outputFilePath = path
+        #print(self.outputFilePath)
 
     @Slot(list)
     def process_external_data(self, data: list):
@@ -16,7 +27,7 @@ class convertArudinoData(QObject):
 
         ## TO BE REMOVED LATER (TEST DATA) ##
 
-        fp='testMusic.musicxml'
+        #fp='testMusic.musicxml'
 
         bpm = 90
 
@@ -57,9 +68,26 @@ class convertArudinoData(QObject):
             part.append(measure)
 
         score.append(part)
-        score.write('musicxml', fp)
+        score.write('musicxml', self.xmlFileName)
 
-        self.xml_file_path.emit(fp)
+        self.convert_to_pdf(self.outputFilePath)
+
+
+
+### Terminal call to MuseScore4.exe
+    def convert_to_pdf(self):
+
+        #MuseScore exe
+        mscore_path = r"C:\Program Files\MuseScore 4\bin\MuseScore4.exe"
+        
+        command = [mscore_path, self.xmlFileName, "-o", self.outputFilePath]
+        
+        try:
+            subprocess.run(command, check=True)
+            print(f"Conversion successful! PDF saved at {self.outputFilePath}")
+        except subprocess.CalledProcessError as e:
+            print(f"Error during conversion: {e}")
+
 
     #Plans for future
     #Determine key signature if not defined by user

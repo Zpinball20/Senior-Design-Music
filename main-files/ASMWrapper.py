@@ -5,6 +5,7 @@ from toAPI import toAPI
 from ASMController import ASMController
 from appView import MainApplication
 from pythonToArduino import py_to_arduino
+from MusicXMLToMIDI import toMIDI
 import os
 import sys
 sys.path.insert(1, os.path.join(os.getcwd(), 'main-files'))
@@ -13,10 +14,10 @@ def main():
     app = QApplication(sys.argv)
 
     arduinoConverter = convertArudinoData()
-    api = toAPI()
     view = MainApplication()
     arduinoComm = py_to_arduino()
-    controller = ASMController(arduinoConverter, api, view, arduinoComm)
+    midiConverter = toMIDI()
+    controller = ASMController(arduinoConverter, view, arduinoComm, midiConverter)
 
     view.show()
     
