@@ -1,7 +1,6 @@
 from PyQt6.QtCore import QObject
 from PyQt6.QtWidgets import QApplication
 from convertArduinoData import convertArudinoData
-from toAPI import toAPI
 from ASMController import ASMController
 from appView import MainApplication
 from pythonToArduino import py_to_arduino

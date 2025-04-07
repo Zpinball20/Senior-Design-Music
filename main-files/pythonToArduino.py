@@ -18,8 +18,6 @@ class py_to_arduino(QObject):
         if(input == True):
             self.timer.start(500)
             print("Now recording")
-            dataArd = arduino.readline().decode('utf-8').strip()
-            print(dataArd)
 
         if(input == False):
             self.timer.start(500)
