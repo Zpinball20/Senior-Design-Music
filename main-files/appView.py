@@ -47,6 +47,8 @@ class MainApplication(QWidget):
         self.send_go_signal = self.audioMenu.record_signal
         self.sheetMusicSavePath = self.audioMenu.sheet_music_save_path
         self.fileName = self.audioMenu.name_of_file
+        self.scoreNameSignal = self.audioMenu.score_name_signal
+        self.composerNameSignal = self.audioMenu.composer_name_signal
 
         # Sheet Music --> MIDI Signals
         self.inputFileLocation = self.midiMenu.inputPdfFile
@@ -58,6 +60,8 @@ class audioMenu(QWidget):
     record_signal = Signal(bool)
     sheet_music_save_path = Signal(str) # Signal for save location of pdf (audio into sheet music)
     name_of_file = Signal(str) # signal for base name of file
+    score_name_signal = Signal(str)
+    composer_name_signal = Signal(str)
 
     def __init__(self, parent):
         super().__init__()
@@ -65,6 +69,8 @@ class audioMenu(QWidget):
         self.recording = False
         self.save_path = None # Save path of the pdf
         self.sheet_music_file_name = None # base name of file
+        self.score_name = ""
+        self.composer_name = ""
 
         layout = QVBoxLayout()
 
@@ -73,24 +79,45 @@ class audioMenu(QWidget):
 
         label = QLabel("Convert Audio to Sheet Music")
 
+        self.title_input = QLineEdit()
+        self.title_input.setPlaceholderText("Enter the title of your score")
+
+        save_title_button = QPushButton("Save Title Name")
+        save_title_button.clicked.connect(self.setScoreName)
+
+        self.name_input = QLineEdit()
+        self.name_input.setPlaceholderText("Enter your name (composer)")
+
+        save_name_button = QPushButton("Save Composer Name")
+        save_name_button.clicked.connect(self.setComposerName)
+
         save_as_button = QPushButton("Save As...")
         save_as_button.clicked.connect(self.choose_save_location)
 
         self.save_location_label = QLabel("No file selected")  # Label to display the chosen file path
 
-        toggle_recording_button = QPushButton("Start Recording")
-        toggle_recording_button.clicked.connect(self.toggle_recording)
+        self.toggle_recording_button = QPushButton("Start Recording")
+        self.toggle_recording_button.clicked.connect(self.toggle_recording)
 
         layout.addWidget(back_button)
         layout.addWidget(label)
+        layout.addWidget(self.title_input)
+        layout.addWidget(save_title_button)
+        layout.addWidget(self.name_input)
+        layout.addWidget(save_name_button)
         layout.addWidget(save_as_button)
         layout.addWidget(self.save_location_label)
-        layout.addWidget(toggle_recording_button)
+        layout.addWidget(self.toggle_recording_button)
         self.setLayout(layout)
 
     def toggle_recording(self):
         self.recording = not self.recording
         self.record_signal.emit(self.recording)
+
+        if self.recording:
+            self.toggle_recording_button.setText("Stop Recording")
+        else:
+            self.toggle_recording_button.setText("Start Recording")
 
     def choose_save_location(self):
         file_path, _ = QFileDialog.getSaveFileName(
@@ -107,6 +134,14 @@ class audioMenu(QWidget):
             #Emit signals to be used in saving the pdf
             self.sheet_music_save_path.emit(self.save_path)
             self.name_of_file.emit(self.file_name)
+
+    def setScoreName(self):
+        self.score_name = self.title_input.text()
+        self.score_name_signal.emit(self.score_name)
+    
+    def setComposerName(self):
+        self.composer_name = self.name_input.text()
+        self.composer_name_signal.emit(self.composer_name)
 
 class midiMenu(QWidget):
 

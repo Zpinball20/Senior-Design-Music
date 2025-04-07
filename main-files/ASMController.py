@@ -17,6 +17,8 @@ class ASMController(QObject):
         #Send user information for file saving the Audio --> Sheet Music
         self.view.sheetMusicSavePath.connect(self.convertArudinoData.set_output_file_path)
         self.view.fileName.connect(self.convertArudinoData.set_musicxml_file_name)
+        self.view.scoreNameSignal.connect(self.convertArudinoData.scoreTitle)
+        self.view.composerNameSignal.connect(self.convertArudinoData.scoreComposer)
 
         #Send user information for file saving the Sheet Music --> MIDI
         self.view.inputFileLocation.connect(self.midiConverter.setInputFilePath)

@@ -1,4 +1,4 @@
-from music21 import stream, note, meter, key, tempo
+from music21 import stream, note, meter, key, tempo, metadata
 from PyQt6.QtCore import QObject, pyqtSignal as Signal, pyqtSlot as Slot
 import subprocess
 
@@ -8,6 +8,8 @@ class convertArudinoData(QObject):
         super().__init__()
         self.xmlFileName = None
         self.outputFilePath = None
+        self.title = None
+        self.composer = None
 
     @Slot(str)
     def set_musicxml_file_name(self, name: str):
@@ -25,13 +27,7 @@ class convertArudinoData(QObject):
         score = stream.Score()
         part = stream.Part()
 
-        ## TO BE REMOVED LATER (TEST DATA) ##
-
-        #fp='testMusic.musicxml'
-
-        bpm = 90
-
-        ######################################
+        bpm = 120
 
         # time sig and key sig
         part.append(meter.TimeSignature('4/4'))
@@ -67,6 +63,10 @@ class convertArudinoData(QObject):
         if len(measure.notes) > 0:
             part.append(measure)
 
+        score.metadata = metadata.Metadata()
+        score.metadata.title = self.title
+        score.metadata.composer = self.composer
+
         score.append(part)
         score.write('musicxml', self.xmlFileName)
 
@@ -89,6 +89,10 @@ class convertArudinoData(QObject):
             print(f"Error during conversion: {e}")
 
 
-    #Plans for future
-    #Determine key signature if not defined by user
-    #take input for bpm
+    @Slot(str)
+    def scoreTitle(self, input: str):
+        self.title = input
+
+    @Slot(str)
+    def scoreComposer(self, input: str):
+        self.composer = input
