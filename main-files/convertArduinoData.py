@@ -34,7 +34,7 @@ class convertArudinoData(QObject):
         part.append(key.KeySignature(0))  # C maj
 
         measure = stream.Measure()
-        current_duration = 0 
+        current_duration = 0
 
         for item in data:
             pitch = item['pitch']
@@ -42,15 +42,16 @@ class convertArudinoData(QObject):
             octave = item['octave']
             duration = item['duration']
 
-            full_pitch = f"{pitch}{accidental}{octave}"
-            n = note.Note(full_pitch)
-            n.quarterLength = duration
+            if pitch == "":  # If no pitch, create a rest
+                rest = note.Rest()
+                rest.quarterLength = duration
+                measure.append(rest)
+            else:  # Otherwise, create a note
+                full_pitch = f"{pitch}{accidental}{octave}"
+                n = note.Note(full_pitch)
+                n.quarterLength = duration
+                measure.append(n)
 
-            metronome = tempo.MetronomeMark(number=bpm)  # set BPM
-            part.append(metronome)
-
-            # Add note to measure
-            measure.append(n)
             current_duration += duration
 
             # Start new measure if current one more than 4 beats (this will be dynamic later)
@@ -71,8 +72,6 @@ class convertArudinoData(QObject):
         score.write('musicxml', self.xmlFileName)
 
         self.convert_to_pdf()
-
-
 
 ### Terminal call to MuseScore4.exe
     def convert_to_pdf(self):
