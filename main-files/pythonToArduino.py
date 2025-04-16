@@ -2,7 +2,7 @@ import serial
 import time
 from PyQt6.QtCore import QObject, pyqtSignal as Signal, pyqtSlot as Slot, QTimer
 
-#arduino = serial.Serial(port='COM5',   baudrate=115200, timeout=.1) #port name is subject to change
+arduino = serial.Serial(port='COM5',   baudrate=115200, timeout=.1)
 
 class py_to_arduino(QObject):
     raw_arduino_data = Signal(list)
@@ -18,22 +18,34 @@ class py_to_arduino(QObject):
 
     @Slot(bool)
     def record_audio(self, input: bool):
-        #arduino.write(bytes(str(input), 'utf-8'))
+        arduino.write(bytes(str(input), 'utf-8'))
 
         if(input == True):
             self.timer.start(500)
             print("Now recording")
 
         if(input == False):
-            #time.sleep(10)
-            #data = self.parseData()
+            time.sleep(5)
+            data = self.parseData()
             #print(dataArd)
-            data = [
-                {"pitch": "C", "accidental": "", "octave": 4, "duration": 1},
-                {"pitch": "", "accidental": "", "octave": 4, "duration": 2},
-                {"pitch": "E", "accidental": "", "octave": 4, "duration": 0.5},
-                {"pitch": "F", "accidental": "", "octave": 4, "duration": 0.5}
-            ]
+            #data = [
+            #    {"pitch": "C", "accidental": "", "octave": 4, "duration": 3},
+            #    {"pitch": "", "accidental": "", "octave": 4, "duration": 1},
+            #    {"pitch": "D", "accidental": "", "octave": 4, "duration": 3},
+            #    {"pitch": "", "accidental": "", "octave": 4, "duration": 1},
+            #    {"pitch": "E", "accidental": "", "octave": 4, "duration": 3},
+            #    {"pitch": "", "accidental": "", "octave": 4, "duration": 1},
+            #    {"pitch": "F", "accidental": "#", "octave": 4, "duration": 3.5},
+            #    {"pitch": "", "accidental": "", "octave": 4, "duration": 0.5},
+            #    {"pitch": "G", "accidental": "", "octave": 4, "duration": 3},
+            #    {"pitch": "", "accidental": "", "octave": 4, "duration": 1},
+            #    {"pitch": "A", "accidental": "", "octave": 4, "duration": 3},
+            #    {"pitch": "", "accidental": "", "octave": 4, "duration": 1},
+            #    {"pitch": "B", "accidental": "", "octave": 4, "duration": 2.5},
+            #    {"pitch": "", "accidental": "", "octave": 4, "duration": 1.5},
+            #    {"pitch": "C", "accidental": "", "octave": 5, "duration": 3},
+            #    {"pitch": "", "accidental": "", "octave": 5, "duration": 1}
+            #]
 
             self.raw_arduino_data.emit(data)
             print("End Recording")
@@ -42,13 +54,11 @@ class py_to_arduino(QObject):
         data = []  # Initialize an empty list to store the parsed data
 
         while True:
-            #note = arduino.readline().decode('utf-8').strip()
-            #duration = arduino.readline().decode('utf-8').strip()
+            note = arduino.readline().decode('utf-8').strip()
+            duration = arduino.readline().decode('utf-8').strip()
 
-            #print(note)
-            #print(duration)
-            note = "blah"
-            duration = "blah"
+            print(note)
+            print(duration)
 
             if not note or not duration:  # Break out of loop if no data
                 break
@@ -67,7 +77,6 @@ class py_to_arduino(QObject):
             beatLength = float(duration) * 2
             parsed_note["duration"] = round(beatLength) / 2  # Round to nearest 0.5 interval
 
-            # Append the parsed note to the list
             data.append(parsed_note)
 
         return data  # Return the accumulated list of notes
